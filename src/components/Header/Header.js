@@ -36,7 +36,7 @@ const Header = () => {
 					<MenuIcon />
 				</IconButton>
 				<Typography variant="h6" className={classes.title}>
-					News
+					Live Guide
 				</Typography>
 				<Button color="inherit">Login</Button>
 			</Toolbar>

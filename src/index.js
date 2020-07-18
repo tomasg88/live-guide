@@ -5,13 +5,20 @@ import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 import { BrowserRouter } from "react-router-dom";
 import "moment/locale/es";
+import { MuiPickersUtilsProvider } from "@material-ui/pickers";
+import MomentUtils from "@date-io/moment";
+import moment from "moment";
+
+moment.locale("es");
 
 ReactDOM.render(
-	<React.StrictMode>
-		<BrowserRouter>
+	// <React.StrictMode>
+	<BrowserRouter>
+		<MuiPickersUtilsProvider utils={MomentUtils} locale={"es"}>
 			<App />
-		</BrowserRouter>
-	</React.StrictMode>,
+		</MuiPickersUtilsProvider>
+	</BrowserRouter>,
+	// </React.StrictMode>,
 	document.getElementById("root")
 );
 
