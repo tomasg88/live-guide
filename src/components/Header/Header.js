@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-const Header = () => {
+const Header = ({ openMenu }) => {
 	const classes = useStyles();
 	return (
 		<AppBar position="absolute">
@@ -32,6 +32,7 @@ const Header = () => {
 					className={classes.menuButton}
 					color="inherit"
 					aria-label="menu"
+					onClick={openMenu}
 				>
 					<MenuIcon />
 				</IconButton>
