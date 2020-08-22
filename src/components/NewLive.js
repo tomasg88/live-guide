@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import {
 	TextField,
 	FormControlLabel,
@@ -16,71 +16,81 @@ import {
 	Slide,
 } from "@material-ui/core";
 import { DateTimePicker } from "@material-ui/pickers";
-// import { moment } from "moment";
-
-// const useStyles = makeStyles((theme) => ({
-// }));
-
-const getBodyObj = (t, d, date, a, p, l, f) => ({
-	title: t,
-	description: d,
-	date: date,
-	account: a,
-	platform: p,
-	link: l,
-	isFree: f,
-});
+import { moment } from "moment";
+import { createLive } from "../api-services/Lives";
 
 const CustomTransition = React.forwardRef(function Transition(props, ref) {
 	return <Slide direction="down" ref={ref} {...props} />;
 });
 
-const NewLiveForm = ({ isOpen, hideForm }) => {
-	// const classes = useStyles();
+const giveMePlatformPrefix = (platform) => {
+	const prefixes = {
+		youtube: "www.youtube.com/u/",
+		facebook: "fb.com/",
+		instagram: "@",
+	};
+	return prefixes[platform];
+};
 
-	const [title, setTitle] = useState("");
-	const [description, setDescription] = useState("");
-	const [date, setDate] = useState(new Date());
-	const [account, setAccount] = useState("");
-	const [platform, setPlatform] = useState("");
-	const [link, setLink] = useState("");
-	const [isFree, setIsFree] = useState(false);
+const getSuggestedTime = () => {
+	const suggested = new Date();
+	suggested.setHours(suggested.getHours() + 1);
+	suggested.setMinutes(0);
+	suggested.setSeconds(0);
+	return suggested;
+};
+
+const NewLiveForm = ({ isOpen, hideForm }) => {
+	const [liveModel, setLiveModel] = useState({
+		title: "",
+		description: "",
+		date: getSuggestedTime(),
+		account: "",
+		platform: "",
+		link: "",
+		isFree: true,
+	});
+
+	// Link is calculated by platform and account
+	useEffect(() => {
+		if (liveModel.platform || liveModel.account) {
+			setLiveModel((prevState) => ({
+				...prevState,
+				link: `${giveMePlatformPrefix(liveModel.platform)}${
+					liveModel.account
+				}`,
+			}));
+		}
+	}, [liveModel.platform, liveModel.account]);
 
 	const handleDateChange = (momentObject) => {
 		const parsedDate = momentObject.format();
-		console.log(parsedDate);
-		setDate(parsedDate);
+		setLiveModel((prevState) => ({
+			...prevState,
+			date: parsedDate,
+		}));
 	};
 
-	useCallback(() => {
-		setLink(`${platform} - ${account}`);
-	}, [platform, account]);
+	const handleChange = (e) => {
+		const { name, value } = e.target;
+		setLiveModel((prevState) => ({
+			...prevState,
+			[name]: value,
+		}));
+	};
 
 	const handleSubmit = () => {
-		// POST /live
-		const body = getBodyObj(
-			title,
-			description,
-			date,
-			account,
-			platform,
-			link,
-			isFree
-		);
-		console.log("handleSubmit -> body", body);
-		var miInit = {
-			method: "POST",
-			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify(body),
+		const doFetch = async (model) => {
+			createLive(liveModel)
+				.then((res) => res.json())
+				.then((response) => {
+					console.log("Success:", response);
+					hideForm();
+				})
+				.catch((error) => console.error("Error:", error));
 		};
 
-		fetch(`${process.env.REACT_APP_API}/live`, miInit)
-			.then((res) => res.json())
-			.catch((error) => console.error("Error:", error))
-			.then((response) => {
-				console.log("Success:", response);
-				hideForm();
-			});
+		doFetch(liveModel);
 	};
 
 	return (
@@ -101,8 +111,8 @@ const NewLiveForm = ({ isOpen, hideForm }) => {
 							label="Título"
 							fullWidth
 							autoComplete="given-name"
-							onChange={(e) => setTitle(e.target.value)}
-							value={title}
+							onChange={handleChange}
+							value={liveModel.title}
 						/>
 					</Grid>
 					<Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
@@ -113,29 +123,17 @@ const NewLiveForm = ({ isOpen, hideForm }) => {
 							label="Descripción"
 							fullWidth
 							autoComplete="shipping address-line1"
-							onChange={(e) => setDescription(e.target.value)}
-							value={description}
+							onChange={handleChange}
+							value={liveModel.description}
 						/>
 					</Grid>
 					<Grid item xs={12}>
 						<DateTimePicker
 							ampm={false}
-							value={date}
+							value={liveModel.date}
 							onChange={handleDateChange}
 							label="Cuando es?"
 							animateYearScrolling
-						/>
-					</Grid>
-					<Grid item xs={12} sm={6}>
-						<TextField
-							required
-							id="account"
-							name="account"
-							label="Cuenta"
-							fullWidth
-							autoComplete="account"
-							onChange={(e) => setAccount(e.target.value)}
-							value={account}
 						/>
 					</Grid>
 					<Grid item xs={12} sm={6}>
@@ -143,8 +141,9 @@ const NewLiveForm = ({ isOpen, hideForm }) => {
 						<Select
 							labelId="platform"
 							id="platform-combo"
-							value={platform}
-							onChange={(e) => setPlatform(e.target.value)}
+							value={liveModel.platform}
+							name={"platform"}
+							onChange={handleChange}
 						>
 							<MenuItem value={""}>
 								<em>Seleccione</em>
@@ -156,10 +155,23 @@ const NewLiveForm = ({ isOpen, hideForm }) => {
 					</Grid>
 					<Grid item xs={12} sm={6}>
 						<TextField
+							required
+							id="account"
+							name="account"
+							label="Cuenta"
+							fullWidth
+							autoComplete="account"
+							onChange={handleChange}
+							value={liveModel.account}
+						/>
+					</Grid>
+					<Grid item xs={12} sm={6}>
+						<TextField
 							disabled
 							id="link"
 							label={"Link a la transmisión"}
-							defaultValue={link}
+							value={liveModel.link}
+							name={"link"}
 						/>
 					</Grid>
 					<Grid item xs={12}>
@@ -167,14 +179,20 @@ const NewLiveForm = ({ isOpen, hideForm }) => {
 							control={
 								<Checkbox
 									color="secondary"
-									name="saveAddress"
-									checked={isFree}
-									onChange={(e) =>
-										setIsFree(e.target.checked)
+									checked={liveModel.isFree}
+									onChange={(ev, checked) =>
+										handleChange({
+											...ev,
+											target: {
+												...ev.target,
+												name: "isFree",
+												value: checked,
+											},
+										})
 									}
 								/>
 							}
-							label="Transmisión gratuita?"
+							label="La transmisión es gratuita?"
 						/>
 					</Grid>
 				</Grid>
