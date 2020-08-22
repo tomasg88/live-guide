@@ -74,7 +74,7 @@ const NewLiveForm = ({ isOpen, hideForm }) => {
 			body: JSON.stringify(body),
 		};
 
-		fetch("http://localhost:1337/live", miInit)
+		fetch(`${process.env.REACT_APP_API}/live`, miInit)
 			.then((res) => res.json())
 			.catch((error) => console.error("Error:", error))
 			.then((response) => {
