@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import "./App.css";
+import "react-toastify/dist/ReactToastify.css";
 import LiveTable from "./components/LiveTable";
 import NewLiveForm from "./components/NewLive";
 import { Fab, makeStyles } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
+import { ToastContainer } from "react-toastify";
 
 const useStyles = makeStyles((theme) => ({
 	fabButton: {
@@ -20,12 +22,13 @@ function App() {
 
 	return (
 		<div className="App-header">
+			<LiveTable />
+
+			{/* componets below are absolute */}
 			<NewLiveForm
 				isOpen={showNewLiveForm}
 				hideForm={() => setShowNewLiveForm(false)}
 			/>
-
-			<LiveTable />
 			<Fab
 				className={classes.fabButton}
 				size="medium"
@@ -33,6 +36,12 @@ function App() {
 			>
 				<AddIcon style={{ color: "#fff" }} size={30} />
 			</Fab>
+			<ToastContainer
+				position="bottom-center"
+				autoClose={5000}
+				hideProgressBar={false}
+				newestOnTop={false}
+			/>
 		</div>
 	);
 }

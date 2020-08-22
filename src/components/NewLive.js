@@ -18,6 +18,7 @@ import {
 import { DateTimePicker } from "@material-ui/pickers";
 import { moment } from "moment";
 import { createLive } from "../api-services/Lives";
+import { toast } from "react-toastify";
 
 const CustomTransition = React.forwardRef(function Transition(props, ref) {
 	return <Slide direction="down" ref={ref} {...props} />;
@@ -86,6 +87,7 @@ const NewLiveForm = ({ isOpen, hideForm }) => {
 				.then((response) => {
 					console.log("Success:", response);
 					hideForm();
+					toast.success("Live creado!!");
 				})
 				.catch((error) => console.error("Error:", error));
 		};
