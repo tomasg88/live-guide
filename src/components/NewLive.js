@@ -34,7 +34,7 @@ const getBodyObj = (t, d, date, a, p, l, f) => ({
 	isFree: f,
 });
 
-const NewLiveForm = () => {
+const NewLiveForm = ({ hideForm }) => {
 	const classes = useStyles();
 
 	const [title, setTitle] = useState("");
@@ -57,7 +57,6 @@ const NewLiveForm = () => {
 
 	const handleSubmit = () => {
 		// POST /live
-		var misCabeceras = new Headers();
 		const body = getBodyObj(
 			title,
 			description,
@@ -77,7 +76,10 @@ const NewLiveForm = () => {
 		fetch("http://localhost:1337/live", miInit)
 			.then((res) => res.json())
 			.catch((error) => console.error("Error:", error))
-			.then((response) => console.log("Success:", response));
+			.then((response) => {
+				console.log("Success:", response);
+				hideForm();
+			});
 	};
 
 	return (

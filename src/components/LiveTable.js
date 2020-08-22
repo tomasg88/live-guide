@@ -1,71 +1,60 @@
-import React from "react";
-import {
-	TableContainer,
-	Table,
-	TableHead,
-	TableRow,
-	TableCell,
-	TableBody,
-	makeStyles,
-	Paper,
-} from "@material-ui/core";
-import Moment from "react-moment";
-import withData from "../hoc/withData";
+import React, { useState, useEffect } from "react";
+import { CircularProgress, Grid, makeStyles, Fade } from "@material-ui/core";
+import LiveCard from "./LiveCard";
+import { getLives } from "../api-services/Lives";
 
 const useStyles = makeStyles((theme) => ({
-	table: {
-		minWidth: 650,
-		width: "70vw",
+	root: {
+		// width: "100%",
 	},
 }));
 
-const LiveTable = ({ rows }) => {
+const LiveTable = (props) => {
 	const classes = useStyles();
+	const [list, setList] = useState([]);
+	const [loading, setLoading] = useState(true);
+
+	useEffect(() => {
+		const doFetch = async () => {
+			getLives()
+				.then((response) => response.json())
+				.then((data) => {
+					setLoading(false);
+					setList(data);
+					console.log("doFetch -> data", data);
+				});
+		};
+
+		doFetch();
+	}, []);
+
 	return (
-		<TableContainer component={Paper} className={classes.table}>
-			<Table
-				stickyHeader
-				className={classes.table}
-				size="small"
-				aria-label="simple table"
-			>
-				<TableHead>
-					<TableRow>
-						<TableCell align="center">Fecha</TableCell>
-						<TableCell align="center">Título</TableCell>
-						<TableCell align="center">Desc</TableCell>
-						<TableCell align="center">Cuenta</TableCell>
-						<TableCell align="center">Plataforma</TableCell>
-						<TableCell align="center">Link</TableCell>
-						<TableCell align="center">Gratis</TableCell>
-					</TableRow>
-				</TableHead>
-				<TableBody>
-					{rows.map((row) => (
-						<TableRow key={row.id}>
-							<TableCell align="center">
-								{/* <Moment locale="es" format="DDD MMMM YYYY"> */}
-								{row.date}
-								{/* </Moment> */}
-							</TableCell>
-							<TableCell component="th" scope="row">
-								{row.title}
-							</TableCell>
-							<TableCell align="center">
-								{row.description}
-							</TableCell>
-							<TableCell align="center">{row.account}</TableCell>
-							<TableCell align="center">{row.platform}</TableCell>
-							<TableCell align="center">
-								{row.url || "hola"}
-							</TableCell>
-							<TableCell align="center">{row.isFree}</TableCell>
-						</TableRow>
-					))}
-				</TableBody>
-			</Table>
-		</TableContainer>
+		<div className={classes.root}>
+			{loading ? (
+				<CircularProgress />
+			) : (
+				<Grid
+					container
+					alignItems="center"
+					justify="flex-start"
+					spacing={4}
+				>
+					{list.length > 0 &&
+						list.map((l, i) => (
+							<Grid item xl={4} lg={4} md={4} sm={4} xs={12}>
+								<Fade
+									in={true}
+									timeout={500 * i + 1}
+									key={l.id}
+								>
+									<LiveCard live={l} />
+								</Fade>
+							</Grid>
+						))}
+				</Grid>
+			)}
+		</div>
 	);
 };
 
-export default withData(LiveTable);
+export default LiveTable;
