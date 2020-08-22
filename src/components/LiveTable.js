@@ -1,16 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { CircularProgress, Grid, makeStyles, Fade } from "@material-ui/core";
+import { CircularProgress, Grid, Fade } from "@material-ui/core";
 import LiveCard from "./LiveCard";
 import { getLives } from "../api-services/Lives";
 
-const useStyles = makeStyles((theme) => ({
-	root: {
-		// width: "100%",
-	},
-}));
-
 const LiveTable = (props) => {
-	const classes = useStyles();
 	const [list, setList] = useState([]);
 	const [loading, setLoading] = useState(true);
 
@@ -29,7 +22,7 @@ const LiveTable = (props) => {
 	}, []);
 
 	return (
-		<div className={classes.root}>
+		<div>
 			{loading ? (
 				<CircularProgress />
 			) : (
@@ -37,16 +30,20 @@ const LiveTable = (props) => {
 					container
 					alignItems="center"
 					justify="flex-start"
-					spacing={4}
+					spacing={3}
 				>
 					{list.length > 0 &&
 						list.map((l, i) => (
-							<Grid item xl={4} lg={4} md={4} sm={4} xs={12}>
-								<Fade
-									in={true}
-									timeout={500 * i + 1}
-									key={l.id}
-								>
+							<Grid
+								item
+								xl={4}
+								lg={4}
+								md={4}
+								sm={6}
+								xs={12}
+								key={l.id}
+							>
+								<Fade in={true} timeout={500 * i + 1}>
 									<LiveCard live={l} />
 								</Fade>
 							</Grid>

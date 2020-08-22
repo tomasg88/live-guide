@@ -1,28 +1,25 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import {
 	TextField,
 	FormControlLabel,
 	Checkbox,
-	Paper,
 	Grid,
-	Typography,
-	makeStyles,
 	InputLabel,
 	MenuItem,
 	Select,
 	Button,
+	Dialog,
+	DialogTitle,
+	DialogContent,
+	DialogContentText,
+	DialogActions,
+	Slide,
 } from "@material-ui/core";
 import { DateTimePicker } from "@material-ui/pickers";
-import { moment } from "moment";
+// import { moment } from "moment";
 
-const useStyles = makeStyles((theme) => ({
-	root: {
-		minWidth: 650,
-		width: "70vw",
-		padding: theme.spacing(2),
-		marginTop: theme.spacing(8),
-	},
-}));
+// const useStyles = makeStyles((theme) => ({
+// }));
 
 const getBodyObj = (t, d, date, a, p, l, f) => ({
 	title: t,
@@ -34,8 +31,12 @@ const getBodyObj = (t, d, date, a, p, l, f) => ({
 	isFree: f,
 });
 
-const NewLiveForm = ({ hideForm }) => {
-	const classes = useStyles();
+const CustomTransition = React.forwardRef(function Transition(props, ref) {
+	return <Slide direction="down" ref={ref} {...props} />;
+});
+
+const NewLiveForm = ({ isOpen, hideForm }) => {
+	// const classes = useStyles();
 
 	const [title, setTitle] = useState("");
 	const [description, setDescription] = useState("");
@@ -83,11 +84,14 @@ const NewLiveForm = ({ hideForm }) => {
 	};
 
 	return (
-		<Paper elevation={3} className={classes.root}>
-			<React.Fragment>
-				<Typography variant="h6" gutterBottom>
-					Nueva transmisión
-				</Typography>
+		<Dialog
+			open={isOpen}
+			aria-labelledby="form-dialog-title"
+			TransitionComponent={CustomTransition}
+		>
+			<DialogTitle id="form-dialog-title">Nueva transmisión</DialogTitle>
+			<DialogContent>
+				<DialogContentText>Ingresa la informacion</DialogContentText>
 				<Grid container spacing={3}>
 					<Grid item xs={12} sm={6} md={4} lg={4} xl={4}>
 						<TextField
@@ -174,20 +178,20 @@ const NewLiveForm = ({ hideForm }) => {
 						/>
 					</Grid>
 				</Grid>
-				<Grid container justify="flex-end">
-					<Button variant="text" color="primary">
-						CANCELAR
-					</Button>
-					<Button
-						variant="contained"
-						color="primary"
-						onClick={handleSubmit}
-					>
-						ENVIAR
-					</Button>
-				</Grid>
-			</React.Fragment>
-		</Paper>
+			</DialogContent>
+			<DialogActions>
+				<Button variant="text" color="primary" onClick={hideForm}>
+					CANCELAR
+				</Button>
+				<Button
+					variant="contained"
+					color="primary"
+					onClick={handleSubmit}
+				>
+					ENVIAR
+				</Button>
+			</DialogActions>
+		</Dialog>
 	);
 };
 
