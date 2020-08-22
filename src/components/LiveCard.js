@@ -10,11 +10,17 @@ import Typography from "@material-ui/core/Typography";
 
 const useStyles = makeStyles({
 	root: {
-		height: "50vh",
+		position: "relative",
+		height: 350,
 		overflow: "auto",
 	},
 	media: {
 		height: 140,
+	},
+	cardActions: {
+		position: "absolute",
+		bottom: 0,
+		right: 0,
 	},
 });
 
@@ -42,12 +48,15 @@ const LiveCard = ({ live }) => {
 					</Typography>
 				</CardContent>
 			</CardActionArea>
-			<CardActions>
-				{live?.url !== "" && (
-					<Button size="small" color="primary">
-						Ir
-					</Button>
-				)}
+			<CardActions className={classes.cardActions}>
+				<Button
+					size="small"
+					variant="contained"
+					color="primary"
+					disabled={!live.url}
+				>
+					Ir
+				</Button>
 			</CardActions>
 		</Card>
 	);
