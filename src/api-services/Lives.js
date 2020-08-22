@@ -6,7 +6,7 @@ export const getLives = async () => {
 		Accept: "application/json",
 	};
 
-	const res = fetch("http://localhost:1337/live", {
+	const res = fetch(`${process.env.REACT_APP_API}/live`, {
 		...headers,
 	});
 	return res;
