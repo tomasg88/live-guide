@@ -53,7 +53,7 @@ const LiveCard = ({ live }) => {
 					size="small"
 					variant="contained"
 					color="primary"
-					disabled={!live.url}
+					disabled={!live.link}
 				>
 					Ir
 				</Button>
