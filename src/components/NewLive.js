@@ -16,7 +16,7 @@ import {
 	Slide,
 } from "@material-ui/core";
 import { DateTimePicker } from "@material-ui/pickers";
-import { moment } from "moment";
+// import { moment } from "moment";
 import { createLive } from "../api-services/Lives";
 import { toast } from "react-toastify";
 
