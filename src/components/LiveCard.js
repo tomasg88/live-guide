@@ -8,7 +8,7 @@ import CardMedia from "@material-ui/core/CardMedia";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import { ListItemText, List, ListItem, ListItemIcon } from "@material-ui/core";
-import DescriptionIcon from "@material-ui/icons/Description";
+import DescriptionOutlinedIcon from "@material-ui/icons/DescriptionOutlined";
 import EventIcon from "@material-ui/icons/Event";
 
 const useStyles = makeStyles({
@@ -48,7 +48,7 @@ const LiveCard = ({ live }) => {
 				<List>
 					<ListItem>
 						<ListItemIcon classes={{ root: classes.listIconWidth }}>
-							<DescriptionIcon />
+							<DescriptionOutlinedIcon />
 						</ListItemIcon>
 						<ListItemText>
 							<Typography

@@ -28,7 +28,7 @@ const LiveTable = (props) => {
 	return (
 		<div>
 			{loading ? (
-				<CircularProgress />
+				<CircularProgress color={"error"} />
 			) : (
 				<Grid
 					container

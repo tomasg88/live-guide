@@ -9,7 +9,7 @@ import { ToastContainer } from "react-toastify";
 
 const useStyles = makeStyles((theme) => ({
 	liveContainer: {
-		margin: "50px 0",
+		margin: "50px auto",
 	},
 	fabButton: {
 		position: "fixed",
