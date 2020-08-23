@@ -15,6 +15,10 @@ const LiveTable = (props) => {
 					setLoading(false);
 					setList(data);
 					console.log("doFetch -> data", data);
+				})
+				.catch((err) => {
+					console.log("doFetch -> err", err);
+					setLoading(false);
 				});
 		};
 
