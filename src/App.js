@@ -3,13 +3,16 @@ import "./App.css";
 import "react-toastify/dist/ReactToastify.css";
 import LiveTable from "./components/LiveTable";
 import NewLiveForm from "./components/NewLive";
-import { Fab, makeStyles } from "@material-ui/core";
+import { Fab, makeStyles, Container } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import { ToastContainer } from "react-toastify";
 
 const useStyles = makeStyles((theme) => ({
+	liveContainer: {
+		margin: "50px 0",
+	},
 	fabButton: {
-		position: "absolute",
+		position: "fixed",
 		bottom: 15,
 		right: 15,
 		backgroundColor: theme.palette.secondary.main,
@@ -22,7 +25,9 @@ function App() {
 
 	return (
 		<div className="App-header">
-			<LiveTable />
+			<Container maxWidth="lg" className={classes.liveContainer}>
+				<LiveTable />
+			</Container>
 
 			{/* componets below are absolute */}
 			<NewLiveForm

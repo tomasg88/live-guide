@@ -35,7 +35,7 @@ const LiveTable = (props) => {
 					{list.length > 0 &&
 						list.map((l, i) => (
 							<Fade in={true} timeout={500 * i + 1} key={l.id}>
-								<Grid item xl={4} lg={4} md={4} sm={6} xs={12}>
+								<Grid item xl={3} lg={3} md={4} sm={6} xs={12}>
 									<LiveCard live={l} />
 								</Grid>
 							</Fade>
