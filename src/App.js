@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 import "./App.css";
-import "react-toastify/dist/ReactToastify.css";
 import LiveTable from "./components/LiveTable";
 import NewLiveForm from "./components/NewLive";
 import { Fab, makeStyles, Container } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
-import { ToastContainer } from "react-toastify";
+import Toast from "./components/Toast";
 
 const useStyles = makeStyles((theme) => ({
 	liveContainer: {
@@ -22,6 +21,19 @@ const useStyles = makeStyles((theme) => ({
 function App() {
 	const classes = useStyles();
 	const [showNewLiveForm, setShowNewLiveForm] = useState(false);
+	const [toast, setToast] = useState({
+		open: false,
+		type: "success",
+		onClose: () => setToast({ open: false }),
+	});
+
+	const handleToast = (type) => {
+		setToast((prevState) => ({
+			...prevState,
+			type: type,
+			open: true,
+		}));
+	};
 
 	return (
 		<div className="App-header">
@@ -33,6 +45,7 @@ function App() {
 			<NewLiveForm
 				isOpen={showNewLiveForm}
 				hideForm={() => setShowNewLiveForm(false)}
+				showToast={handleToast}
 			/>
 			<Fab
 				className={classes.fabButton}
@@ -41,12 +54,7 @@ function App() {
 			>
 				<AddIcon style={{ color: "#fff" }} size={30} />
 			</Fab>
-			<ToastContainer
-				position="bottom-center"
-				autoClose={5000}
-				hideProgressBar={false}
-				newestOnTop={false}
-			/>
+			<Toast {...toast} />
 		</div>
 	);
 }
