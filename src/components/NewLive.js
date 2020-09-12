@@ -16,32 +16,14 @@ import {
 	Slide,
 } from "@material-ui/core";
 import { DateTimePicker } from "@material-ui/pickers";
-// import { moment } from "moment";
 import { createLive } from "../api-services/Lives";
-import { toast } from "react-toastify";
+import { getSuggestedTime, giveMePlatformPrefix } from "../utils/live";
 
 const CustomTransition = React.forwardRef(function Transition(props, ref) {
 	return <Slide direction="down" ref={ref} {...props} />;
 });
 
-const giveMePlatformPrefix = (platform) => {
-	const prefixes = {
-		youtube: "www.youtube.com/u/",
-		facebook: "fb.com/",
-		instagram: "@",
-	};
-	return prefixes[platform];
-};
-
-const getSuggestedTime = () => {
-	const suggested = new Date();
-	suggested.setHours(suggested.getHours() + 1);
-	suggested.setMinutes(0);
-	suggested.setSeconds(0);
-	return suggested;
-};
-
-const NewLiveForm = ({ isOpen, hideForm }) => {
+const NewLiveForm = ({ isOpen, hideForm, showToast }) => {
 	const [liveModel, setLiveModel] = useState({
 		title: "",
 		description: "",
@@ -65,10 +47,10 @@ const NewLiveForm = ({ isOpen, hideForm }) => {
 	}, [liveModel.platform, liveModel.account]);
 
 	const handleDateChange = (momentObject) => {
-		const parsedDate = momentObject.format();
+		debugger;
 		setLiveModel((prevState) => ({
 			...prevState,
-			date: parsedDate,
+			date: momentObject.valueOf(), // Unix timestamp format
 		}));
 	};
 
@@ -82,14 +64,17 @@ const NewLiveForm = ({ isOpen, hideForm }) => {
 
 	const handleSubmit = () => {
 		const doFetch = async (model) => {
-			createLive(liveModel)
+			createLive(model)
 				.then((res) => res.json())
 				.then((response) => {
 					console.log("Success:", response);
 					hideForm();
-					toast.success("Live creado!!");
+					showToast("success");
 				})
-				.catch((error) => console.error("Error:", error));
+				.catch((error) => {
+					console.error("Error:", error);
+					showToast("error");
+				});
 		};
 
 		doFetch(liveModel);
@@ -134,6 +119,7 @@ const NewLiveForm = ({ isOpen, hideForm }) => {
 							ampm={false}
 							value={liveModel.date}
 							onChange={handleDateChange}
+							format={"dddd D MMM, HH:mm"}
 							label="Cuando es?"
 							animateYearScrolling
 						/>
