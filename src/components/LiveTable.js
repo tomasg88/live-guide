@@ -27,25 +27,20 @@ const LiveTable = (props) => {
 
 	return (
 		<div>
-			{loading ? (
-				<CircularProgress color={"error"} />
-			) : (
-				<Grid
-					container
-					alignItems="center"
-					justify="flex-start"
-					spacing={3}
-				>
-					{list.length > 0 &&
-						list.map((l, i) => (
-							<Fade in={true} timeout={500 * i + 1} key={l.id}>
-								<Grid item xl={3} lg={3} md={4} sm={6} xs={12}>
-									<LiveCard live={l} />
-								</Grid>
-							</Fade>
-						))}
-				</Grid>
-			)}
+			<Grid container alignItems="center" justify="center" spacing={3}>
+				{loading ? (
+					<CircularProgress color={"secondary"} />
+				) : (
+					list.length > 0 &&
+					list.map((l, i) => (
+						<Fade in={true} timeout={500 * i + 1} key={l.id}>
+							<Grid item xl={3} lg={3} md={4} sm={6} xs={12}>
+								<LiveCard live={l} />
+							</Grid>
+						</Fade>
+					))
+				)}
+			</Grid>
 		</div>
 	);
 };
